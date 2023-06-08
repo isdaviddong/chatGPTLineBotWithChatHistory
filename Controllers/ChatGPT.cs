@@ -8,27 +8,21 @@ namespace test.Controllers
 
     public class ChatGPT
     {
-        const string AzureOpenAIEndpoint = "https://_______.openai.azure.com";  //👉replace it with your Azure OpenAI Endpoint
-        const string AzureOpenAIModelName = "gpt35"; //👉repleace it with your Azure OpenAI Model Name
-        const string AzureOpenAIToken = "c1f08___________298"; //👉repleace it with your Azure OpenAI Token
-        const string AzureOpenAIVersion = "2023-03-15-preview";  //👉replace  it with your Azure OpenAI Model Version
-
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public enum role
         {
             assistant, user, system
         }
 
-        public static string CallAzureOpenAIChatAPI(
-            string endpoint, string modelName, string apiKey, string apiVersion, object requestData)
+        public static string CallOpenAIChatAPI(object requestData)
         {
             var client = new HttpClient();
 
             // 設定 API 網址
-            var apiUrl = $"{endpoint}/openai/deployments/{modelName}/chat/completions?api-version={apiVersion}";
+            var apiUrl = $"https://api.openai.com/v1/chat/completions";
 
             // 設定 HTTP request headers
-            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer sk-f______________________h");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT heade
             // 將 requestData 物件序列化成 JSON 字串
             string jsonRequestData = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
@@ -41,7 +35,6 @@ namespace test.Controllers
             var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(responseContent);
             return obj.choices[0].message.content.Value;
         }
-
 
         public static string getResponseFromGPT(string Message, List<Message> chatHistory)
         {
@@ -86,8 +79,7 @@ namespace test.Controllers
                 content = Message
             });
             //回傳呼叫結果
-            return ChatGPT.CallAzureOpenAIChatAPI(
-               AzureOpenAIEndpoint, AzureOpenAIModelName, AzureOpenAIToken, AzureOpenAIVersion,
+            return ChatGPT.CallOpenAIChatAPI(              
                 new
                 {
                     model = "gpt-3.5-turbo",

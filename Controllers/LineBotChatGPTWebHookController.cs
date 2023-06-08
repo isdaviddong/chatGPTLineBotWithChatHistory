@@ -9,12 +9,12 @@ namespace isRock.Template
         [HttpPost]
         public IActionResult POST()
         {
-            const string AdminUserId = "___Repleace_it_with_your_Admin_User_ID___"; //👉repleace it with your Admin User Id
+            const string AdminUserId = "__________________"; //👉repleace it with your Admin User Id
 
             try
             {
                 //設定ChannelAccessToken
-                this.ChannelAccessToken = "___Repleace_it_with_your_Channel_Access_Token___"; //👉repleace it with your Channel Access Token
+                this.ChannelAccessToken = "__________________"; //👉repleace it with your Channel Access Token
                 //配合Line Verify
                 if (ReceivedMessage.events == null || ReceivedMessage.events.Count() <= 0 ||
                     ReceivedMessage.events.FirstOrDefault().replyToken == "00000000000000000000000000000000") return Ok();
