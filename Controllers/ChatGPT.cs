@@ -1,10 +1,14 @@
-﻿using static test.Controllers.ChatGPT;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 
 namespace test.Controllers
 {
+    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+    public enum Role
+    {
+        assistant, user, system
+    }
 
     public class ChatGPT
     {
@@ -12,12 +16,6 @@ namespace test.Controllers
         const string AzureOpenAIModelName = "gpt35"; //👉repleace it with your Azure OpenAI Model Name
         const string AzureOpenAIToken = "c1f08___________298"; //👉repleace it with your Azure OpenAI Token
         const string AzureOpenAIVersion = "2023-03-15-preview";  //👉replace  it with your Azure OpenAI Model Version
-
-        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public enum role
-        {
-            assistant, user, system
-        }
 
         public static string CallAzureOpenAIChatAPI(
             string endpoint, string modelName, string apiKey, string apiVersion, object requestData)
@@ -49,7 +47,7 @@ namespace test.Controllers
             var messages = new List<ChatMessage>
                     {
                         new ChatMessage {
-                            role = ChatGPT.role.system ,
+                            role = Role.system ,
                             content = @"
                                 假設你是一個專業的導遊人員，對於客戶非常有禮貌、也能夠安撫客戶的抱怨情緒。
                                 請檢視底下的客戶訊息，以最親切有禮的方式回應。
@@ -71,18 +69,18 @@ namespace test.Controllers
                 //添加一組對話紀錄
                 messages.Add(new ChatMessage()
                 {
-                    role = ChatGPT.role.user,
+                    role = Role.user,
                     content = HistoryMessageItem.UserMessage
                 });
                 messages.Add(new ChatMessage()
                 {
-                    role = ChatGPT.role.assistant,
+                    role = Role.assistant,
                     content = HistoryMessageItem.ResponseMessage
                 });
             }
             messages.Add(new ChatMessage()
             {
-                role = ChatGPT.role.user,
+                role = Role.user,
                 content = Message
             });
             //回傳呼叫結果
@@ -99,7 +97,7 @@ namespace test.Controllers
 
     public class ChatMessage
     {
-        public role role { get; set; }
+        public Role role { get; set; }
         public string content { get; set; }
     }
 
